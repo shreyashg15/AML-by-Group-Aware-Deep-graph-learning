@@ -163,7 +163,10 @@ def main():
         
         if 'label' not in df.columns and 'isFraud' in df.columns:
             df['label'] = df['isFraud']
-
+        save_path = f"data/{converted_file_name}.csv"
+        df.to_csv(save_path, index=False)
+        st.success(f"File saved to: {save_path}")
+        st.write(f"[Click here to download]({save_path})")
         G = nx.from_pandas_edgelist(df, source='source', target='target', edge_attr='amount', create_using=nx.DiGraph())
         fraud_nodes = set(df[df['label'] == 1]['source']).union(set(df[df['label'] == 1]['target']))
         pos = nx.spring_layout(G)
