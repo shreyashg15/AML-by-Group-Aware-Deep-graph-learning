@@ -101,8 +101,8 @@ def visualize_graph(G, fraud_nodes, pos, groups, mode="Static", transactions=Non
 # Extra Tree Graph Function
 # =============================
 def visualize_tree_graph(G, fraud_nodes):
-    plt.figure(figsize=(12, 8))
-    pos = nx.spring_layout(G)
+    fig, ax = plt.subplots(figsize=(20, 16))
+    pos = nx.spring_layout(G, k=15, iterations=300, seed=42)
 
     nx.draw_networkx_edges(G, pos, alpha=0.5, arrows=True, arrowstyle='-|>', arrowsize=12)
 
