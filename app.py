@@ -2,7 +2,13 @@ import streamlit as st
 import pandas as pd
 import networkx as nx
 import plotly.graph_objects as go
+import matplotlib
+matplotlib.use('Agg')
+import streamlit.components.v1 as components
+
+
 import matplotlib.pyplot as plt
+
 
 # =============================
 # Graph Visualization Function
@@ -101,27 +107,32 @@ def visualize_graph(G, fraud_nodes, pos, groups, mode="Static", transactions=Non
 # Extra Tree Graph Function
 # =============================
 def visualize_tree_graph(G, fraud_nodes):
+    import mpld3
+    from mpld3 import plugins
+
     fig, ax = plt.subplots(figsize=(20, 16))
     pos = nx.spring_layout(G, k=15, iterations=300, seed=42)
 
-    nx.draw_networkx_edges(G, pos, alpha=0.5, arrows=True, arrowstyle='-|>', arrowsize=12)
+    nx.draw_networkx_edges(G, pos, alpha=0.5, arrows=True, arrowstyle='-|>', arrowsize=12,ax=ax)
 
     nx.draw_networkx_nodes(
         G, pos,
         nodelist=[n for n in G.nodes if n in fraud_nodes],
         node_color='lightcoral',
         edgecolors='red',
-        node_size=500
+        node_size=500,
+        ax=ax
     )
     nx.draw_networkx_nodes(
         G, pos,
         nodelist=[n for n in G.nodes if n not in fraud_nodes],
         node_color='lightblue',
         edgecolors='black',
-        node_size=500
+        node_size=500,
+        ax=ax
     )
 
-    nx.draw_networkx_labels(G, pos, font_size=8)
+    nx.draw_networkx_labels(G, pos, font_size=8,ax=ax)
 
     plt.title("Tree Graph - Money Laundering Flow", fontsize=15)
     fraud_patch = plt.Line2D([0], [0], marker='o', color='w', label='Fraud',
@@ -129,6 +140,10 @@ def visualize_tree_graph(G, fraud_nodes):
     nonfraud_patch = plt.Line2D([0], [0], marker='o', color='w', label='Non-Fraud',
                                 markerfacecolor='lightblue', markeredgecolor='black', markersize=10)
     plt.legend(handles=[fraud_patch, nonfraud_patch])
+    plugins.connect(fig, plugins.Zoom(), plugins.BoxZoom(), plugins.Reset())
+    html_str = mpld3.fig_to_html(fig)
+    plt.close(fig)  # prevent matplotlib from displaying it separately
+    return html_str
     st.pyplot(plt)
 
 
@@ -175,7 +190,29 @@ def main():
         visualize_graph(G, fraud_nodes, pos, groups=None, mode=mode, transactions=df)
 
         st.subheader("Extra Tree Graph")
-        visualize_tree_graph(G, fraud_nodes)
+        tree_html = visualize_tree_graph(G, fraud_nodes)
+        components.html(tree_html, height=800, scrolling=True)
+        # --- Add footer ---
+st.markdown(
+    """
+    <style>
+    .footer {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        padding: 5px 10px;
+        font-size: 12px;
+        color: rgba(100, 100, 100, 0.7); /* Light grey color */
+    }
+    </style>
+    <div class="footer">
+        Project developed by ShreyasHG &amp; Team
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+        
 
 
 if __name__ == "__main__":
