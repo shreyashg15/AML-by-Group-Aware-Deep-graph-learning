@@ -1,3 +1,4 @@
 build-essential
 graphviz
 libgl1
+python3-dev
