@@ -1,9 +1,5 @@
 # Core deep learning
-torch==2.2.2
 torch-geometric==2.5.3
-torch-scatter==2.1.2
-torch-sparse==0.6.18
-torch-cluster==1.6.3
 
 # Data processing
 numpy==1.26.4
