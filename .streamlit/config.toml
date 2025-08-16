@@ -1,5 +1,11 @@
 [server]
 headless = true
 
-[build]
-command = "./setup.sh"
+[client]
+showErrorDetails = true
+
+[theme]
+base = "light"
+
+[general]
+setupCommand = "./setup.sh"

@@ -1,11 +1,2 @@
-[server]
-headless = true
-
-[client]
-showErrorDetails = true
-
-[theme]
-base = "light"
-
-[general]
-setupCommand = "./setup.sh"
+#!/bin/bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
