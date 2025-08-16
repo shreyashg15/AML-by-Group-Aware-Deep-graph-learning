@@ -1,16 +1,17 @@
-# Core PyTorch stack (CPU builds)
+# Core PyTorch (CPU builds, works with Python 3.10/3.11)
 torch==2.2.0
 torchvision==0.17.0
 torchaudio==2.2.0
 
-# PyTorch Geometric stack (CPU builds)
+# PyTorch Geometric (CPU builds, for torch 2.2.0)
 torch-geometric==2.5.3
-torch-scatter==2.1.2+pt22cpu   -f https://data.pyg.org/whl/torch-2.2.0+cpu.html
-torch-sparse==0.6.18+pt22cpu   -f https://data.pyg.org/whl/torch-2.2.0+cpu.html
-torch-cluster==1.6.3+pt22cpu   -f https://data.pyg.org/whl/torch-2.2.0+cpu.html
-torch-spline-conv==1.2.2+pt22cpu   -f https://data.pyg.org/whl/torch-2.2.0+cpu.html
+torch-scatter==2.1.2+pt22cpu       ; sys_platform == "linux"
+torch-sparse==0.6.18+pt22cpu       ; sys_platform == "linux"
+torch-cluster==1.6.3+pt22cpu       ; sys_platform == "linux"
+torch-spline-conv==1.2.2+pt22cpu   ; sys_platform == "linux"
+-f https://data.pyg.org/whl/torch-2.2.0+cpu.html
 
-# App libraries
+# Core libraries
 streamlit==1.37.0
 pandas
 numpy
