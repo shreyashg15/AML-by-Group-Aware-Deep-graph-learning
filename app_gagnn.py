@@ -30,6 +30,18 @@ from torch_geometric.nn import GCNConv, GAE
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
+import subprocess
+
+# Install torch manually if not present
+try:
+    import torch
+except ImportError:
+    subprocess.run([
+        "pip", "install", "torch", "--index-url", "https://download.pytorch.org/whl/cpu"
+    ])
+    import torch
+
+
 # -------------------------
 # (UNCHANGED) Visualization functions
 # -------------------------
