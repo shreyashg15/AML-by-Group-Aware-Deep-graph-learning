@@ -1,3 +1,11 @@
+torch==2.2.2+cpu --index-url https://download.pytorch.org/whl/cpu
+torch-geometric==2.5.3
+torch-scatter==2.1.2
+
+
+
+
+# (Add any other packages your app needs)
 
 
 # Data processing
