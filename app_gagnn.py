@@ -29,13 +29,13 @@ from torch_geometric.nn import GCNConv, GAE
 
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-
 import subprocess
+import os
 
-# Install torch manually if not present
+# Attempt to install torch if missing
 try:
     import torch
-except ImportError:
+except ModuleNotFoundError:
     subprocess.run([
         "pip", "install", "torch", "--index-url", "https://download.pytorch.org/whl/cpu"
     ])
