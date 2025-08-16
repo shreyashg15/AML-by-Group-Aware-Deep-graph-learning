@@ -1,5 +1,4 @@
-# Core deep learning
-torch-geometric==2.5.3
+
 
 # Data processing
 numpy==1.26.4
