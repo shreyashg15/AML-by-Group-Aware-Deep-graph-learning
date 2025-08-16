@@ -1,5 +1,4 @@
-build-essential
-graphviz
-libgl1
+python3
 python3-dev
-cmake
+python3-pip
+build-essential

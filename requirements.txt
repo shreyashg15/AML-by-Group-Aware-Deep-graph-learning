@@ -1,6 +1,19 @@
-# requirements.txt
-torch==2.2.2
-torch-geometric==2.5.3
+# Core ML libraries
+torch==2.5.1
+torch-geometric==2.6.1
 torch-scatter==2.1.2
-plotly
+torch-sparse==0.6.18
+torch-cluster==1.6.3
+
+# Data handling
+pandas
+numpy
+scikit-learn
+
+# Visualization
+matplotlib
+seaborn
+networkx
+
+# Streamlit app
 streamlit
