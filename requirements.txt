@@ -1,19 +1,18 @@
 # Core
 streamlit==1.37.0
+pandas
+numpy
+scikit-learn
+networkx
+matplotlib
+seaborn
 
-# Ensure torch is installed before PyG extensions
+# Torch ecosystem (do not reorder, setup.sh handles it)
 torch==2.5.1
-
-# PyTorch Geometric ecosystem
+torchvision==0.20.1
+torchaudio==2.5.1
+torch-geometric==2.5.3
 torch-scatter==2.1.2
 torch-sparse==0.6.18
-torch-geometric==2.6.1
-
-# Data handling
-numpy
-pandas
-scikit-learn
-
-# Visualization
-matplotlib
-networkx
+torch-cluster==1.6.3
+torch-spline-conv==1.2.2
