@@ -1,8 +1,16 @@
-torch==2.2.0
-torchvision==0.17.0
-torchaudio==2.2.0
+# Core PyTorch stack (CUDA 12.1 wheels)
+torch==2.2.0+cu121      -f https://download.pytorch.org/whl/torch_stable.html
+torchvision==0.17.0+cu121  -f https://download.pytorch.org/whl/torch_stable.html
+torchaudio==2.2.0+cu121    -f https://download.pytorch.org/whl/torch_stable.html
+
+# PyTorch Geometric stack
 torch-geometric==2.5.3
-torch-scatter==2.1.2
+torch-scatter==2.1.2+pt22cu121   -f https://data.pyg.org/whl/torch-2.2.0+cu121.html
+torch-sparse==0.6.18+pt22cu121   -f https://data.pyg.org/whl/torch-2.2.0+cu121.html
+torch-cluster==1.6.3+pt22cu121   -f https://data.pyg.org/whl/torch-2.2.0+cu121.html
+torch-spline-conv==1.2.2+pt22cu121   -f https://data.pyg.org/whl/torch-2.2.0+cu121.html
+
+# App libraries
 streamlit==1.37.0
 pandas
 numpy
