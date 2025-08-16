@@ -2,4 +2,8 @@
 headless = true
 
 [build]
+<<<<<<< HEAD
 preRun = "bash setup.sh"
+=======
+preRun = "bash setup.sh"
+>>>>>>> bf7f833 (update)
