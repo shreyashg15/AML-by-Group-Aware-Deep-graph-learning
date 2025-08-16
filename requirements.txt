@@ -1,19 +1,19 @@
-# Core ML libraries
+# Core
+streamlit==1.37.0
+
+# Ensure torch is installed before PyG extensions
 torch==2.5.1
-torch-geometric==2.6.1
+
+# PyTorch Geometric ecosystem
 torch-scatter==2.1.2
 torch-sparse==0.6.18
-torch-cluster==1.6.3
+torch-geometric==2.6.1
 
 # Data handling
-pandas
 numpy
+pandas
 scikit-learn
 
 # Visualization
 matplotlib
-seaborn
 networkx
-
-# Streamlit app
-streamlit
