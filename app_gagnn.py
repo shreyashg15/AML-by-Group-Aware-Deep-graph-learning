@@ -35,9 +35,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 # -------------------------
 # If you modified them earlier, keep them as-is; here we include versions identical to your original app_gagnn.py
 def visualize_graph(G, fraud_nodes, pos, groups, mode="Static", transactions=None):
-    # -- identical to your previous interactive/static visualizer --
-    # Keep your existing implementation unchanged. If you have a different function in repo,
-    # you can paste it here instead. This is a minimal placeholder; the main app elsewhere uses plotly functions.
+
     edge_x, edge_y = [], []
     for edge in G.edges():
         x0, y0 = pos[edge[0]]
@@ -91,7 +89,7 @@ def visualize_graph(G, fraud_nodes, pos, groups, mode="Static", transactions=Non
     return fig
 
 def visualize_tree_graph_plotly(G, fraud_nodes):
-    # identical to your original function (kept unchanged)
+
     pos = nx.spring_layout(G, k=15, iterations=300, seed=42)
     edge_x, edge_y = [], []
     for edge in G.edges():
@@ -331,6 +329,40 @@ def load_or_train_model(df: pd.DataFrame, force_retrain=False, epochs=100, lr=0.
             if patience_count >= patience:
                 status.text(f"Early stopping after {epoch} epochs (no improvement).")
                 break
+    # --- Evaluation on train edges (as proxy since unsupervised) ---
+    model.eval()
+    with torch.no_grad():
+        z = model.encode(data.x, data.train_pos_edge_index)
+
+        pos_edge_index = data.train_pos_edge_index
+        pos_out = (z[pos_edge_index[0]] * z[pos_edge_index[1]]).sum(dim=1)
+        pos_probs = torch.sigmoid(pos_out).cpu().numpy()
+        pos_labels = np.ones(pos_probs.shape[0])
+
+        neg_edge_index = negative_sampling(
+            edge_index=data.train_pos_edge_index,
+            num_nodes=data.num_nodes,
+            num_neg_samples=pos_edge_index.size(1)
+        ).to(device)
+        neg_out = (z[neg_edge_index[0]] * z[neg_edge_index[1]]).sum(dim=1)
+        neg_probs = torch.sigmoid(neg_out).cpu().numpy()
+        neg_labels = np.zeros(neg_probs.shape[0])
+
+        y_true = np.concatenate([pos_labels, neg_labels])
+        y_pred_prob = np.concatenate([pos_probs, neg_probs])
+        y_pred = (y_pred_prob >= 0.5).astype(int)
+
+        from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+        acc = accuracy_score(y_true, y_pred)
+        prec = precision_score(y_true, y_pred)
+        rec = recall_score(y_true, y_pred)
+        f1 = f1_score(y_true, y_pred)
+        auc = roc_auc_score(y_true, y_pred_prob)
+
+        metrics = {"Accuracy": acc, "Precision": prec, "Recall": rec, "F1 Score": f1, "AUC-ROC": auc}
+
+    st.subheader("Evaluation Metrics")
+    st.table(pd.DataFrame(metrics, index=[0]).T.rename(columns={0: "Score"}))
 
     elapsed = time.time() - start_time
 
@@ -404,7 +436,7 @@ def load_or_train_model(df: pd.DataFrame, force_retrain=False, epochs=100, lr=0.
 # Plotting helper used in the original app (unchanged)
 # -------------------------
 def plot_graph_with_predictions(df: pd.DataFrame, preds_df: pd.DataFrame, src_col="source", tgt_col="target", amount_col="amount", mode="Interactive", threshold=0.5):
-    # Keep this function exactly as it was previously in your app_gagnn.py
+
     # (builds NetworkX, positions, and returns Plotly figure + list of high nodes)
     node_to_prob = {r["node"]: r["fraud_prob"] for _, r in preds_df.iterrows()}
     node_to_group = {r["node"]: int(r["group"]) for _, r in preds_df.iterrows()}
@@ -473,7 +505,7 @@ def plot_graph_with_predictions(df: pd.DataFrame, preds_df: pd.DataFrame, src_co
 # -------------------------
 def main():
     st.set_page_config(layout="wide")
-    st.title("GAGNN — Unsupervised Link-based Money Laundering Detector (GAE + Clustering)")
+    st.title("GAGNN — Unsupervised Link-based Money Laundering Detector")
 
     st.sidebar.header("Controls")
     uploaded_file = st.sidebar.file_uploader("Upload CSV (transactions)", type=["csv"])
@@ -521,8 +553,8 @@ def main():
         st.error("CSV must contain 'source' and 'target' columns (or nameOrig/nameDest).")
         st.stop()
 
-    # Train or load model (this function now shows training progress + saves custom & fixed names)
-    preds_df, model_path = load_or_train_model(df, force_retrain=force_retrain, epochs=int(epochs), lr=float(lr), hidden=int(hidden), emb=int(emb), device_str=device_choice, custom_name=custom_name, patience=int(patience))
+    # Train or load model (this function  shows training progress + saves custom & fixed names)
+    preds_df, model_path, metrics = load_or_train_model(df, force_retrain=force_retrain, epochs=int(epochs), lr=float(lr), hidden=int(hidden), emb=int(emb), device_str=device_choice, custom_name=custom_name, patience=int(patience))
 
     st.success(f"Model ready — loaded/saved at: {model_path}")
     st.write(f"Predictions: {preds_df.shape[0]} nodes")
