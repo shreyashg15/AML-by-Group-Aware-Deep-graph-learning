@@ -263,7 +263,14 @@ def load_or_train_model(df: pd.DataFrame, force_retrain=False, epochs=100, lr=0.
     if model_path.exists() and pred_path.exists() and not force_retrain:
         st.info("Found saved model & predictions — loading them.")
         preds_df = pd.read_csv(pred_path)
-        return preds_df, str(model_path)
+        metrics = {
+        "Accuracy": None,
+        "Precision": None,
+        "Recall": None,
+        "F1 Score": None,
+        "AUC-ROC": None
+        }
+        return preds_df, str(model_path),metrics
 
     # else: train
     st.info("No saved model found for this dataset — starting unsupervised training (GAE + clustering).")
